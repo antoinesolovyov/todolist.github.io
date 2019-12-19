@@ -1,1 +1,3 @@
-# todolist.github.io
+# todolist
+
+Simple To-Do list project
