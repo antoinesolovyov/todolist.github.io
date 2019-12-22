@@ -1,122 +1,117 @@
-html {
-  height: 100%;
-}
-
 body {
-  padding: 0px;
-  margin: 0px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  font-family: Roboto Condensed;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Roboto Condensed;
 }
 
 form {
-  display: flex;
-  border: 2px solid black;
-  margin-bottom: 16px;
+    display: flex;
+    border: 2px solid black;
+    margin-bottom: 16px;
 }
 
 .authForm {
-  border: none;
-  flex-direction: column;
-  align-items: center;
+    border: none;
+    flex-direction: column;
+    align-items: center;
 }
 
 button {
-  font-family: Roboto Condensed;
-  font-size: 16px;
-  font-weight: 400;
-  width: 240px;
-  height: 48px;
-  border: none;
-  outline: none;
+    font-family: Roboto Condensed;
+    font-size: 16px;
+    font-weight: 400;
+    width: 240px;
+    height: 48px;
+    border: none;
+    outline: none;
 }
 
 .signIn {
-  background: black;
-  outline: 2px solid black;
-  color: white;
+    background: black;
+    outline: 2px solid black;
+    color: white;
 }
 
 .signUp {
-  outline: 2px solid black;
-  color: black;
+    outline: 2px solid black;
+    color: black;
 }
 
 .add {
-  background-image: url(icons/arrow-icon.svg);
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 48px;
+    background-image: url(icons/arrow-icon.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 48px;
 }
 
 input {
-  width: 216px;
-  height: 48px;
-  outline: none;
-  border: 2px solid black;;
-  font-family: Roboto Condensed;
-  font-size: 16px;
-  font-weight: 400;
-  padding: 0px 12px;
-  margin-bottom: 16px;
+    width: 216px;
+    height: 48px;
+    outline: none;
+    border: 2px solid black;
+    font-family: Roboto Condensed;
+    font-size: 16px;
+    font-weight: 400;
+    padding: 0px 12px;
+    margin-bottom: 16px;
 }
 
 input::placeholder {
-  font-family: Roboto Condensed;
-  color: grey;
-  font-weight: 400;
+    font-family: Roboto Condensed;
+    color: grey;
+    font-weight: 400;
 }
 
 .inputTask {
-  width: 420px;
-  border: none;
-  padding: 0px 0px 0px 12px;
-  margin-bottom: 0px;
+    width: 420px;
+    border: none;
+    padding: 0px 0px 0px 12px;
+    margin-bottom: 0px;
 }
 
 div {
-  border: 2px solid black;
+    border: 2px solid black;
 }
 
 table {
-  padding: 0px;
-  margin: 0px;
-  width: 480px;
-  border-collapse: collapse;
-  border: "2px solid black";
+    padding: 0px;
+    margin: 0px;
+    width: 480px;
+    border-collapse: collapse;
+    border: "2px solid black";
 }
 
 td {
-  padding: 0px;
-  margin: 0px;
-  width: 48px;
-  height: 48px;
+    padding: 0px;
+    margin: 0px;
+    width: 48px;
+    height: 48px;
 }
 
 .tab {
-  width: 160px;
-  text-align: center;
-  border-right: 2px solid black;
+    width: 160px;
+    text-align: center;
+    border-right: 2px solid black;
 }
 
 .checkbox {
-  background-image: url(icons/square-icon.svg);
-  background-size: 24px 24px;
-  background-repeat: no-repeat;
-  background-position: center;
+    background-image: url(icons/square-icon.svg);
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .task {
-  padding: 0px;
-  width: 384px;
+    padding: 0px;
+    width: 384px;
 }
 
 .delete {
-  background-image: none;
-  background-size: 24px 24px;
-  background-repeat: no-repeat;
-  background-position: center;
+    background-image: none;
+    background-size: 24px 24px;
+    background-repeat: no-repeat;
+    background-position: center;
 }
