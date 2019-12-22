@@ -1,9 +1,8 @@
-import { FormComponent } from "./components/FormComponent.js";
-
 import { HeaderComponent } from "./components/HeaderComponent.js";
-import { FooterComponent } from "./components/FooterComponent.js";
+import { FormComponent } from "./components/FormComponent.js";
 import { InputComponent } from "./components/InputComponent.js";
 import { TableComponent } from "./components/TableComponent.js";
+import { FooterComponent } from "./components/FooterComponent.js";
 
 import { ItemComponent } from "./components/ItemComponent.js";
 import { ItemObject } from "./ItemObject.js";
@@ -16,34 +15,33 @@ const footerAnchor = document.createElement("footer");
 document.body.append(headerAnchor, formAnchor, listAnchor, footerAnchor);
 
 const headerComponent = new HeaderComponent(headerAnchor);
-const footerComponent = new FooterComponent(footerAnchor);
+const formComponent = new FormComponent(formAnchor);
 const inputComponent = new InputComponent(listAnchor);
 const tableComponent = new TableComponent(listAnchor);
+const footerComponent = new FooterComponent(footerAnchor);
 
-const formComponent = new FormComponent(formAnchor);
-
+// If localStorage has a token,
+// then check authorization and show to-do list,
+// else show authorization form
 if (localStorage.getItem("token")) {
     if (checkAuth()) {
         inputComponent.render();
         tableComponent.render();
     }
 } else {
+    formComponent.render();
+
     formComponent.form.addEventListener("submit", event => {
         event.preventDefault();
-
         request();
     });
-
-    formComponent.render();
 }
 
 headerComponent.render();
 footerComponent.render();
 
-console.log(localStorage);
-
 try {
-    // load items from local storage
+    // if list is exist then load items from localStorage
     if ("list" in localStorage) {
         const list = JSON.parse(localStorage.getItem("list"));
 
@@ -59,14 +57,12 @@ try {
         }
     }
 
-    // input button onclick
-    inputComponent.button.onclick = () => {
+    // input button click
+    inputComponent.button.addEventListener("click", event => {
+        event.preventDefault();
+
         if (inputComponent.input.value) {
-            const itemObject = new ItemObject(
-                Date.now(),
-                inputComponent.input.value,
-                false
-            );
+            const itemObject = new ItemObject(Date.now(), inputComponent.input.value, false);
             const itemComponent = new ItemComponent(itemObject);
 
             inputComponent.input.value = "";
@@ -88,9 +84,7 @@ try {
 
             tableComponent.render();
         }
-
-        return false;
-    };
+    });
 
     // unfinished tab click event
     tableComponent.bar.unfinished.addEventListener("click", () => {
@@ -119,6 +113,7 @@ try {
         tableComponent.render();
     });
 
+    // item event listeners
     function addEventListeners(itemObject, itemComponent) {
         // checkbox click event
         itemComponent.checkbox.addEventListener("click", () => {
@@ -142,7 +137,6 @@ try {
         });
     }
 
-    // checkbox handler
     function checkboxHandler(itemObject, itemComponent) {
         if (itemComponent.isFinished) {
             tableComponent.list.unfinishedCount++;
@@ -172,7 +166,6 @@ try {
         tableComponent.render();
     }
 
-    // delete handler
     function deleteHandler(itemObject, itemComponent) {
         tableComponent.list.count--;
         itemComponent.isFinished
@@ -193,45 +186,40 @@ try {
 }
 
 async function checkAuth() {
-    const response = await fetch("https://todo-app-back.herokuapp.com/me", {
-        method: "GET",
-        headers: {
-            Authorization: localStorage.getItem("token")
+    try {
+        const response = await fetch("https://todo-app-back.herokuapp.com/me", {
+            method: "GET",
+            headers: {
+                Authorization: localStorage.getItem("token")
+            }
+        });
+
+        const json = await response.json();
+
+        if (json.token === localStorage.getItem("token")) {
+            return true;
+        } else {
+            return false;
         }
-    });
-
-    const json = await response.json();
-
-    console.log("From checkAuth:", json);
-
-    if (json.token === localStorage.getItem("token")) {
-        formAnchor.innerHTML = "";
-    } else {
-        formComponent.render();
+    } catch (e) {
+        console.log("Exception:", e);
     }
 }
 
 async function request() {
-    let json;
-
     try {
-        const response = await fetch(
-            "https://todo-app-back.herokuapp.com/login",
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    email: formComponent.login,
-                    password: formComponent.password
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
+        const response = await fetch("https://todo-app-back.herokuapp.com/login", {
+            method: "POST",
+            body: JSON.stringify({
+                email: formComponent.login,
+                password: formComponent.password
+            }),
+            headers: {
+                "Content-Type": "application/json"
             }
-        ).catch(reason => {
-            console.error(reason);
         });
 
-        json = await response.json();
+        const json = await response.json();
 
         if (json.error === "User does not exist") {
             formComponent.loginElement.style.borderColor = "red";
@@ -242,6 +230,7 @@ async function request() {
         } else {
             formComponent.loginElement.style.borderColor = "green";
             formComponent.passwordElement.style.borderColor = "green";
+            
             localStorage.setItem("id", json.id);
             localStorage.setItem("token", json.token);
 
@@ -249,8 +238,6 @@ async function request() {
             tableComponent.render();
             formAnchor.innerHTML = "";
         }
-
-        console.log("From request:", json);
     } catch (e) {
         console.log("Exception:", e);
     }

@@ -11,8 +11,9 @@ export class ListComponent {
         this.items[itemComponent.id] = itemComponent;
         this.count++;
 
-        if (!itemComponent.isFinished) this.unfinishedCount++;
-        else this.finishedCount++;
+        itemComponent.isFinished
+            ? this.finishedCount++
+            : this.unfinishedCount++;
     }
 
     get finishedList() {

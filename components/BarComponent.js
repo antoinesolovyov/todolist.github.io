@@ -1,13 +1,22 @@
+/*\
+ *      + –––––––––––––––– + –––––––––––––– + –––––––––– +
+ *      | Unfinished [ 0 ] | Finished [ 0 ] | All [ 0 ]  |
+ *      + –––––––––––––––– + –––––––––––––– + –––––––––– +
+\*/
+
 export class BarComponent {
     constructor(anchor) {
         this.bar = document.createElement("table");
         this.tabList = document.createElement("tr");
+
         this.unfinished = document.createElement("td");
         this.unfinished.innerText = "Unfinished [ 0 ]";
         this.unfinished.className = "tab";
+
         this.finished = document.createElement("td");
         this.finished.innerText = "Finished [ 0 ]";
         this.finished.className = "tab";
+
         this.all = document.createElement("td");
         this.all.innerText = "All [ 0 ]";
         this.all.className = "tab";

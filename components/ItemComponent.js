@@ -1,3 +1,9 @@
+/*\
+ *      + –––––––––––––––––––––––––––––––––––––––––––––– +
+ *      | [ ] Task                                     X |
+ *      + –––––––––––––––––––––––––––––––––––––––––––––– +
+\*/
+
 export class ItemComponent {
     constructor(item) {
         this.checkbox = document.createElement("td");
