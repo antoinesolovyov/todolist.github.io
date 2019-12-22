@@ -8,7 +8,7 @@ export class ItemComponent {
         this.task.innerText = item.task;
         this.task.className = "task";
         this.task.style.textDecoration = item.textDecoration;
-        
+
         this.delete = document.createElement("td");
         this.delete.className = "delete";
 

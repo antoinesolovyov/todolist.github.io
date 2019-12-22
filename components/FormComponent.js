@@ -1,3 +1,6 @@
+// log antoinesolovyov@gmail.com
+// pas 2ie3wsatwtw
+
 export class FormComponent {
     constructor(anchor) {
         this.login = "";
@@ -9,9 +12,16 @@ export class FormComponent {
         this.loginElement = document.createElement("input");
         this.loginElement.type = "text";
         this.loginElement.placeholder = "Login";
+        this.loginElement.addEventListener("change", event => {
+            this.login = event.target.value;
+        });
+
         this.passwordElement = document.createElement("input");
         this.passwordElement.type = "password";
         this.passwordElement.placeholder = "Password";
+        this.passwordElement.addEventListener("change", event => {
+            this.password = event.target.value;
+        });
 
         this.separatorElement = document.createElement("p");
         this.separatorElement.innerText = "- or -";
@@ -19,6 +29,7 @@ export class FormComponent {
         this.signInElement = document.createElement("button");
         this.signInElement.innerText = "Sign In";
         this.signInElement.className = "signIn";
+
         this.signUpElement = document.createElement("button");
         this.signUpElement.innerText = "Sign Up";
         this.signUpElement.className = "signUp";
@@ -33,27 +44,49 @@ export class FormComponent {
             this.signUpElement
         );
 
-        this.form.onsubmit = this.onSubmit.bind(this);
-
         this.anchor = anchor;
     }
 
     async request() {
-        const response = await fetch(
-            "https://todo-app-back.herokuapp.com/login",
-            {
-                method: "POST",
-                body: JSON.stringify({
-                    email: "antoinesolovyov@gmail.com",
-                    password: "2ie3wsatwtw"
-                }),
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            }
-        );
+        let json;
 
-        const json = await response.json();
+        try {
+            const response = await fetch(
+                "https://todo-app-back.herokuapp.com/login",
+                {
+                    method: "POST",
+                    body: JSON.stringify({
+                        email: this.login,
+                        password: this.password
+                    }),
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            ).catch((reason) => {
+                console.error(reason);
+            });
+
+
+            json = await response.json();
+
+            if (json.error === "User does not exist") {
+                this.loginElement.style.borderColor = "red";
+                this.passwordElement.style.borderColor = "red";
+            } else if (json.error === "Wrong password") {
+                this.loginElement.style.borderColor = "green";
+                this.passwordElement.style.borderColor = "red";
+            } else {
+                this.loginElement.style.borderColor = "green";
+                this.passwordElement.style.borderColor = "green";
+                localStorage.setItem("id", json.id);
+                localStorage.setItem("token", json.token);
+            }
+
+            console.log("From request:", json);
+        } catch (e) {
+            console.log("Exception:", e);
+        }
 
         return json;
     }
@@ -62,45 +95,24 @@ export class FormComponent {
         const response = await fetch("https://todo-app-back.herokuapp.com/me", {
             method: "GET",
             headers: {
-                Authorization: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjVkZjhhM2EwMmVhNzBjMDAxNjgyNmRhOCIsImVtYWlsIjoiYW50b2luZXNvbG92eW92QGdtYWlsLmNvbSIsInBhc3N3b3JkIjoiJDJhJDEwJElJNmE5RU9uMnltLlBudUw2NFpHME9ISVJvcjUycHVvSmJrczRxL2ltS05IS0s1dk9rZUZhIiwidXNlcm5hbWUiOiLQkNC90YLQvtC9INCh0L7Qu9C-0LLRjNC10LIiLCJfX3YiOjB9LCJpYXQiOjE1NzY3NDkwNzJ9.rnlk6CL55uAM3Zd8pBEDddBmRZAS3C1iBLbHbe2y9mo"
+                Authorization: localStorage.getItem("token")
             }
         });
 
         const json = await response.json();
 
-        console.log(json.id, json.token);
+        console.log("From checkAuth:", json);
+        if (json)
+            this.anchor.innerHTML = "";
+        
+        return json;
     }
 
-    onSubmit() {
-        const colorRed = "red";
-        const colorGreen = "green";
-
-        let flag = false;
-
-        if (this.loginElement.value === "") {
-            this.loginElement.style.borderColor = colorRed;
-            flag = false;
-        } else {
-            this.loginElement.style.borderColor = colorGreen;
-            this.login = this.loginElement.value;
-        }
-
-        if (this.passwordElement.value === "") {
-            this.passwordElement.style.borderColor = colorRed;
-            flag = false;
-        } else {
-            this.passwordElement.style.borderColor = colorGreen;
-            this.password = this.passwordElement.value;
-        }
-
+    onSubmit(event) {
+        event.preventDefault();
         this.request();
-        this.checkAuth();
 
-        if (flag) {
-            document.body.innerHTML = "";
-        }
-
-        return flag;
+        return false;
     }
 
     render() {
