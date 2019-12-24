@@ -20,8 +20,6 @@ const inputComponent = new InputComponent(listAnchor);
 const tableComponent = new TableComponent(listAnchor);
 const footerComponent = new FooterComponent(footerAnchor);
 
-console.log(localStorage);
-
 // If localStorage has a token,
 // then check authorization and show to-do list,
 // else show authorization form
