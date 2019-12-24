@@ -20,6 +20,8 @@ const inputComponent = new InputComponent(listAnchor);
 const tableComponent = new TableComponent(listAnchor);
 const footerComponent = new FooterComponent(footerAnchor);
 
+console.log(localStorage);
+
 // If localStorage has a token,
 // then check authorization and show to-do list,
 // else show authorization form
@@ -62,7 +64,11 @@ try {
         event.preventDefault();
 
         if (inputComponent.input.value) {
-            const itemObject = new ItemObject(Date.now(), inputComponent.input.value, false);
+            const itemObject = new ItemObject(
+                Date.now(),
+                inputComponent.input.value,
+                false
+            );
             const itemComponent = new ItemComponent(itemObject);
 
             inputComponent.input.value = "";
@@ -158,8 +164,14 @@ try {
             itemComponent.setItemComponent(itemObject);
         }
 
-        const list = JSON.parse(localStorage.getItem("list"));
-        list.push(itemObject);
+        let list = JSON.parse(localStorage.getItem("list"));
+        list = list.map(item => {
+            if (item.id === itemObject.id) {
+                item = itemObject;
+            }
+
+            return item;
+        });
         localStorage.setItem("list", JSON.stringify(list));
 
         tableComponent.bar.setTabsText(tableComponent.list);
@@ -208,16 +220,19 @@ async function checkAuth() {
 
 async function request() {
     try {
-        const response = await fetch("https://todo-app-back.herokuapp.com/login", {
-            method: "POST",
-            body: JSON.stringify({
-                email: formComponent.login,
-                password: formComponent.password
-            }),
-            headers: {
-                "Content-Type": "application/json"
+        const response = await fetch(
+            "https://todo-app-back.herokuapp.com/login",
+            {
+                method: "POST",
+                body: JSON.stringify({
+                    email: formComponent.login,
+                    password: formComponent.password
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
             }
-        });
+        );
 
         const json = await response.json();
 
@@ -230,7 +245,7 @@ async function request() {
         } else {
             formComponent.loginElement.style.borderColor = "green";
             formComponent.passwordElement.style.borderColor = "green";
-            
+
             localStorage.setItem("id", json.id);
             localStorage.setItem("token", json.token);
 
